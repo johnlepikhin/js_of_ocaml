@@ -80,7 +80,8 @@ module type EventHandler = sig
   val a_onmessage : event -> [> | `OnMessage] event_handler_fun
 end
 
-module Svg : Svg_sigs.T
+module D : sig
+  module Svg : Svg_sigs.T
   with type Xml.uri = Xml.uri
    and type Xml.event_handler = Xml.event_handler
    and type Xml.attrib = Xml.attrib
@@ -88,7 +89,6 @@ module Svg : Svg_sigs.T
    and type 'a Xml.wrap = 'a
    and type 'a wrap = 'a
 
-module D : sig
   module Raw : Html5_sigs.T
     with type Xml.uri = Xml.uri
      and type Xml.event_handler = Xml.event_handler
@@ -109,7 +109,7 @@ module R: sig
      and type Xml.event_handler = Xml.event_handler
      and type Xml.attrib = Xml.attrib
      and type Xml.elt = Xml.elt
-     and module Svg := Svg
+     and module Svg := D.Svg
      and type 'a elt = 'a D.elt
      and type 'a Xml.wrap = 'a React.signal
      and type 'a wrap = 'a React.signal
@@ -159,4 +159,6 @@ module To : sig
   val table : Html5_types.table D.elt -> Dom_html.tableElement Js.t
   val canvas : 'a Html5_types.canvas D.elt -> Dom_html.canvasElement Js.t
   val iframe : Html5_types.iframe D.elt -> Dom_html.iFrameElement Js.t
+  val video : [`Video] D.elt -> Dom_html.videoElement Js.t
+  val audio : [`Video] D.elt -> Dom_html.audioElement Js.t
 end

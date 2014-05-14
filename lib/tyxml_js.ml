@@ -7,7 +7,6 @@ module Xml = struct
   let string_of_uri s = s
   type aname = string
   type event_handler = Dom_html.event Js.t -> bool
-  type opaque
   type attrib_k =
     | Event of event_handler
     | Attr of Dom.attr Js.t
@@ -149,8 +148,8 @@ module type EventHandler = sig
   val a_onmessage : event -> [> | `OnMessage] event_handler_fun
 end
 
-module Svg = Svg_f.Make(Xml)
 module D = struct
+  module Svg = Svg_f.Make(Xml)
   module Raw = Html5_f.Make(Xml)(Svg)
   module X = Xml
   open Raw
@@ -347,4 +346,6 @@ module To = struct
   let table = coerce
   let canvas = coerce
   let iframe = coerce
+  let video = coerce
+  let audio = coerce
 end
