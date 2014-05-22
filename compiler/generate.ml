@@ -146,7 +146,7 @@ module Share = struct
         ["caml_trampoline";"caml_trampoline_return";"caml_wrap_exception"] in
     {count; vars = empty_aux}
 
-  let get_string gen s t =
+  let get_string ?encoding gen s t =
     (* disabled because it is done later on Js ast *)
     (* try *)
     (*   let c = StringMap.find s t.count.strings in *)
@@ -163,7 +163,7 @@ module Share = struct
     (*   else *)
     (*     gen s *)
     (* with Not_found-> *)
-      gen s
+      gen ?encoding s
 
   let get_prim gen s t =
     let s = Primitive.resolve s in
@@ -234,7 +234,7 @@ let float_const f = val_float (J.ENum f)
 
 let s_var name = J.EVar (J.S {J.name=name; J.var = None})
 
-let str_js s = J.EStr (s,`Bytes)
+let str_js ?(encoding=`Bytes) s = J.EStr (s,encoding)
 
 
 (****)
@@ -265,7 +265,7 @@ let max_depth = 10
 let rec constant_rec ~ctx x level instrs =
   match x with
     String s ->
-      let e = Share.get_string str_js s ctx.Ctx.share in
+      let e = Share.get_string ~encoding:`Utf8 str_js s ctx.Ctx.share in
       let p = Share.get_prim s_var "caml_new_string" ctx.Ctx.share in
       J.ECall (p,[e]), instrs
   | IString s ->
